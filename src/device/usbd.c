@@ -712,13 +712,37 @@ static bool process_control_request(uint8_t rhport, tusb_control_request_t const
 
         case TUSB_REQ_SET_FEATURE:
           // Only support remote wakeup for device feature
-          TU_VERIFY(TUSB_REQ_FEATURE_REMOTE_WAKEUP == p_request->wValue);
+          if(p_request->wValue == TUSB_REQ_FEATURE_REMOTE_WAKEUP)
+          {
+            TU_LOG(USBD_DBG, "    Enable Remote Wakeup\r\n");
 
-          TU_LOG(USBD_DBG, "    Enable Remote Wakeup\r\n");
+            // Host may enable remote wake up before suspending especially HID device
+            _usbd_dev.remote_wakeup_en = true;
+            tud_control_status(rhport, p_request);
+          }
+          else if((p_request->wValue == TUSB_REQ_FEATURE_TEST_MODE) && (p_request->wLength == 0))
+          {
+            /* Inspect for Test Selector (high byte of wIndex, lower byte must be zero) */
+            switch(p_request->wIndex)
+            {
+              case USB_WINDEX_TEST_J:
+              case USB_WINDEX_TEST_K:
+              case USB_WINDEX_TEST_SE0_NAK:
+              case USB_WINDEX_TEST_PACKET:
+              {
+                if(tud_control_status(rhport, p_request) == false)
+                {
+                  break;
+                }
+                else
+                {
+                  if (dcd_set_test_mode) dcd_set_test_mode(p_request->wIndex);
+                }
+              }
+              break;
+            }
 
-          // Host may enable remote wake up before suspending especially HID device
-          _usbd_dev.remote_wakeup_en = true;
-          tud_control_status(rhport, p_request);
+          }
         break;
 
         case TUSB_REQ_CLEAR_FEATURE:

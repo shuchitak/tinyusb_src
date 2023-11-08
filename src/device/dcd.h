@@ -132,6 +132,9 @@ void dcd_connect(uint8_t rhport) TU_ATTR_WEAK;
 // Disconnect by disabling internal pull-up resistor on D+/D-
 void dcd_disconnect(uint8_t rhport) TU_ATTR_WEAK;
 
+// Invoked when received TUSB_REQ_FEATURE_TEST_MODE request
+TU_ATTR_WEAK void dcd_set_test_mode(unsigned test_mode);
+
 //--------------------------------------------------------------------+
 // Endpoint API
 //--------------------------------------------------------------------+
