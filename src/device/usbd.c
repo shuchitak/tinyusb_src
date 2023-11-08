@@ -730,14 +730,15 @@ static bool process_control_request(uint8_t rhport, tusb_control_request_t const
               case USB_WINDEX_TEST_SE0_NAK:
               case USB_WINDEX_TEST_PACKET:
               {
-                if(tud_control_status(rhport, p_request) == false)
+                if (dcd_set_test_mode) dcd_set_test_mode(p_request->wIndex);
+                /*if(tud_control_status(rhport, p_request) == false)
                 {
                   break;
                 }
                 else
                 {
                   if (dcd_set_test_mode) dcd_set_test_mode(p_request->wIndex);
-                }
+                }*/
               }
               break;
             }
