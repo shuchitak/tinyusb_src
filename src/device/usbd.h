@@ -139,6 +139,9 @@ TU_ATTR_WEAK void tud_resume_cb(void);
 // Invoked when received control request with VENDOR TYPE
 TU_ATTR_WEAK bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_request_t const * request);
 
+// Invoked when ZLP xfer stage of TUSB_REQ_FEATURE_TEST_MODE request completes
+TU_ATTR_WEAK bool tud_test_mode_req_status_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_request_t const * request);
+
 //--------------------------------------------------------------------+
 // Binary Device Object Store (BOS) Descriptor Templates
 //--------------------------------------------------------------------+

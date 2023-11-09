@@ -730,15 +730,11 @@ static bool process_control_request(uint8_t rhport, tusb_control_request_t const
               case USB_WINDEX_TEST_SE0_NAK:
               case USB_WINDEX_TEST_PACKET:
               {
-                if (dcd_set_test_mode) dcd_set_test_mode(p_request->wIndex);
-                /*if(tud_control_status(rhport, p_request) == false)
+                tud_control_status(rhport, p_request);
+                if(tud_test_mode_req_status_xfer_cb)
                 {
-                  break;
+                  usbd_control_set_complete_callback(tud_test_mode_req_status_xfer_cb);
                 }
-                else
-                {
-                  if (dcd_set_test_mode) dcd_set_test_mode(p_request->wIndex);
-                }*/
               }
               break;
             }
@@ -1406,6 +1402,12 @@ void usbd_edpt_close(uint8_t rhport, uint8_t ep_addr)
   _usbd_dev.ep_status[epnum][dir].claimed = false;
 
   return;
+}
+
+// Set device in test mode in response to TUSB_REQ_FEATURE_TEST_MODE
+void usbd_set_test_mode(uint16_t test_mode)
+{
+  dcd_set_test_mode(test_mode);
 }
 
 #endif

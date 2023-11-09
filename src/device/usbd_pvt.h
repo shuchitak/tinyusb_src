@@ -102,6 +102,9 @@ bool usbd_edpt_ready(uint8_t rhport, uint8_t ep_addr)
   return !usbd_edpt_busy(rhport, ep_addr) && !usbd_edpt_stalled(rhport, ep_addr);
 }
 
+// Set device in test mode in response to TUSB_REQ_FEATURE_TEST_MODE
+void usbd_set_test_mode(uint16_t test_mode);
+
 /*------------------------------------------------------------------*/
 /* Helper
  *------------------------------------------------------------------*/

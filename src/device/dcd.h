@@ -132,8 +132,8 @@ void dcd_connect(uint8_t rhport) TU_ATTR_WEAK;
 // Disconnect by disabling internal pull-up resistor on D+/D-
 void dcd_disconnect(uint8_t rhport) TU_ATTR_WEAK;
 
-// Invoked when received TUSB_REQ_FEATURE_TEST_MODE request
-TU_ATTR_WEAK void dcd_set_test_mode(unsigned test_mode);
+// Transition device to test mode
+void dcd_set_test_mode(uint16_t test_mode);
 
 //--------------------------------------------------------------------+
 // Endpoint API
@@ -168,6 +168,7 @@ void dcd_edpt_stall           (uint8_t rhport, uint8_t ep_addr);
 // clear stall, data toggle is also reset to DATA0
 // This API never calls with control endpoints, since it is auto cleared when receiving setup packet
 void dcd_edpt_clear_stall     (uint8_t rhport, uint8_t ep_addr);
+
 
 //--------------------------------------------------------------------+
 // Event API (implemented by stack)
