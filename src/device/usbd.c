@@ -725,10 +725,10 @@ static bool process_control_request(uint8_t rhport, tusb_control_request_t const
             /* Inspect for Test Selector (high byte of wIndex, lower byte must be zero) */
             switch(p_request->wIndex)
             {
-              case USB_WINDEX_TEST_J:
-              case USB_WINDEX_TEST_K:
-              case USB_WINDEX_TEST_SE0_NAK:
-              case USB_WINDEX_TEST_PACKET:
+              case TUSB_USB_WINDEX_TEST_J:
+              case TUSB_USB_WINDEX_TEST_K:
+              case TUSB_USB_WINDEX_TEST_SE0_NAK:
+              case TUSB_USB_WINDEX_TEST_PACKET:
               {
                 tud_control_status(rhport, p_request);
                 if(tud_test_mode_req_status_xfer_cb)
@@ -1405,9 +1405,11 @@ void usbd_edpt_close(uint8_t rhport, uint8_t ep_addr)
 }
 
 // Set device in test mode in response to TUSB_REQ_FEATURE_TEST_MODE
-void usbd_set_test_mode(uint16_t test_mode)
+bool usbd_set_test_mode(uint16_t test_mode)
 {
+  TU_VERIFY(dcd_set_test_mode);
   dcd_set_test_mode(test_mode);
+  return true;
 }
 
 #endif

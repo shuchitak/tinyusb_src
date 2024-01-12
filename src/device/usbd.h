@@ -848,11 +848,11 @@ TU_ATTR_WEAK bool tud_test_mode_req_status_xfer_cb(uint8_t rhport, uint8_t stage
   7, TUSB_DESC_ENDPOINT, _epout, TUSB_XFER_BULK, U16_TO_U8S_LE(_epsize), 0
 
 // Test selector defines for Test mode
-#define USB_WINDEX_TEST_J               (0x1<<8)
-#define USB_WINDEX_TEST_K               (0x2<<8)
-#define USB_WINDEX_TEST_SE0_NAK         (0x3<<8)
-#define USB_WINDEX_TEST_PACKET          (0x4<<8)
-#define USB_WINDEX_TEST_FORCE_ENABLE    (0x5<<8)
+#define TUSB_USB_WINDEX_TEST_J               (0x1<<8)
+#define TUSB_USB_WINDEX_TEST_K               (0x2<<8)
+#define TUSB_USB_WINDEX_TEST_SE0_NAK         (0x3<<8)
+#define TUSB_USB_WINDEX_TEST_PACKET          (0x4<<8)
+#define TUSB_USB_WINDEX_TEST_FORCE_ENABLE    (0x5<<8)
 
 
 #ifdef __cplusplus

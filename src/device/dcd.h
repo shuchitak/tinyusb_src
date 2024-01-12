@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2019 Ha Thach (tinyusb.org)
@@ -133,7 +133,7 @@ void dcd_connect(uint8_t rhport) TU_ATTR_WEAK;
 void dcd_disconnect(uint8_t rhport) TU_ATTR_WEAK;
 
 // Transition device to test mode
-void dcd_set_test_mode(uint16_t test_mode);
+void dcd_set_test_mode(uint16_t test_mode) TU_ATTR_WEAK;
 
 //--------------------------------------------------------------------+
 // Endpoint API

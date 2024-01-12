@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2019 Ha Thach (tinyusb.org)
@@ -103,7 +103,7 @@ bool usbd_edpt_ready(uint8_t rhport, uint8_t ep_addr)
 }
 
 // Set device in test mode in response to TUSB_REQ_FEATURE_TEST_MODE
-void usbd_set_test_mode(uint16_t test_mode);
+bool usbd_set_test_mode(uint16_t test_mode);
 
 /*------------------------------------------------------------------*/
 /* Helper
