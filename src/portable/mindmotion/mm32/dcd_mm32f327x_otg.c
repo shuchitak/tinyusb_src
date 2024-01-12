@@ -110,7 +110,7 @@ typedef struct
 // INTERNAL OBJECT & FUNCTION DECLARATION
 //--------------------------------------------------------------------+
 // BDT(Buffer Descriptor Table) must be 256-byte aligned
-CFG_TUSB_MEM_SECTION TU_ATTR_ALIGNED(512) static dcd_data_t _dcd;
+CFG_TUD_MEM_SECTION TU_ATTR_ALIGNED(512) static dcd_data_t _dcd;
 
 TU_VERIFY_STATIC( sizeof(_dcd.bdt) == 512, "size is not correct" );
 
@@ -303,6 +303,14 @@ void dcd_disconnect(uint8_t rhport)
 {
   (void) rhport;
   USB_OTG_FS->CTL      = 0;
+}
+
+void dcd_sof_enable(uint8_t rhport, bool en)
+{
+  (void) rhport;
+  (void) en;
+
+  // TODO implement later
 }
 
 //--------------------------------------------------------------------+

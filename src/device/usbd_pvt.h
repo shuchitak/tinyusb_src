@@ -23,8 +23,8 @@
  *
  * This file is part of the TinyUSB stack.
  */
-#ifndef USBD_PVT_H_
-#define USBD_PVT_H_
+#ifndef _TUSB_USBD_PVT_H_
+#define _TUSB_USBD_PVT_H_
 
 #include "osal/osal.h"
 #include "common/tusb_fifo.h"
@@ -33,13 +33,14 @@
  extern "C" {
 #endif
 
+#define TU_LOG_USBD(...)   TU_LOG(CFG_TUD_LOG_LEVEL, __VA_ARGS__)
+
 //--------------------------------------------------------------------+
 // Class Driver API
 //--------------------------------------------------------------------+
 
-typedef struct
-{
-  #if CFG_TUSB_DEBUG >= 2
+typedef struct {
+  #if CFG_TUSB_DEBUG >= CFG_TUD_LOG_LEVEL
   char const* name;
   #endif
 
@@ -48,11 +49,11 @@ typedef struct
   uint16_t (* open             ) (uint8_t rhport, tusb_desc_interface_t const * desc_intf, uint16_t max_len);
   bool     (* control_xfer_cb  ) (uint8_t rhport, uint8_t stage, tusb_control_request_t const * request);
   bool     (* xfer_cb          ) (uint8_t rhport, uint8_t ep_addr, xfer_result_t result, uint32_t xferred_bytes);
-  void     (* sof              ) (uint8_t rhport); /* optional */
+  void     (* sof              ) (uint8_t rhport, uint32_t frame_count); // optional
 } usbd_class_driver_t;
 
 // Invoked when initializing device stack to get additional class drivers.
-// Can optionally implemented by application to extend/overwrite class driver support.
+// Can be implemented by application to extend/overwrite class driver support.
 // Note: The drivers array must be accessible at all time when stack is active
 usbd_class_driver_t const* usbd_app_driver_get_cb(uint8_t* driver_count) TU_ATTR_WEAK;
 
@@ -62,6 +63,7 @@ void usbd_int_set(bool enabled);
 
 //--------------------------------------------------------------------+
 // USBD Endpoint API
+// Note: rhport should be 0 since device stack only support 1 rhport for now
 //--------------------------------------------------------------------+
 
 // Open an endpoint
@@ -95,12 +97,20 @@ void usbd_edpt_clear_stall(uint8_t rhport, uint8_t ep_addr);
 // Check if endpoint is stalled
 bool usbd_edpt_stalled(uint8_t rhport, uint8_t ep_addr);
 
+// Allocate packet buffer used by ISO endpoints
+bool usbd_edpt_iso_alloc(uint8_t rhport, uint8_t ep_addr, uint16_t largest_packet_size);
+
+// Configure and enable an ISO endpoint according to descriptor
+bool usbd_edpt_iso_activate(uint8_t rhport,  tusb_desc_endpoint_t const * p_endpoint_desc);
+
 // Check if endpoint is ready (not busy and not stalled)
 TU_ATTR_ALWAYS_INLINE static inline
-bool usbd_edpt_ready(uint8_t rhport, uint8_t ep_addr)
-{
+bool usbd_edpt_ready(uint8_t rhport, uint8_t ep_addr) {
   return !usbd_edpt_busy(rhport, ep_addr) && !usbd_edpt_stalled(rhport, ep_addr);
 }
+
+// Enable SOF interrupt
+void usbd_sof_enable(uint8_t rhport, bool en);
 
 // Set device in test mode in response to TUSB_REQ_FEATURE_TEST_MODE
 bool usbd_set_test_mode(uint16_t test_mode);
@@ -110,11 +120,10 @@ bool usbd_set_test_mode(uint16_t test_mode);
  *------------------------------------------------------------------*/
 
 bool usbd_open_edpt_pair(uint8_t rhport, uint8_t const* p_desc, uint8_t ep_count, uint8_t xfer_type, uint8_t* ep_out, uint8_t* ep_in);
-void usbd_defer_func( osal_task_func_t func, void* param, bool in_isr );
-
+void usbd_defer_func(osal_task_func_t func, void *param, bool in_isr);
 
 #ifdef __cplusplus
  }
 #endif
 
-#endif /* USBD_PVT_H_ */
+#endif
